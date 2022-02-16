@@ -34,7 +34,7 @@ def args_parser():
     parser.add_argument('--num_channels', type=int, default=3, help="number of channels of imges")
     parser.add_argument('--gpu', type=int, default=0, help="GPU ID, -1 for CPU")
     parser.add_argument('--stopping_rounds', type=int, default=5, help='rounds of early stopping')
-    parser.add_argument('--verbose', action='store_true', help='verbose print')
+    parser.add_argument('--verbose', action='store_true', help='verbose logging.info')
     parser.add_argument('--seed', type=int, default=1, help='random seed (default: 1)')
     args = parser.parse_args()
     torch.manual_seed(args.seed)  # setting random seed for CPU

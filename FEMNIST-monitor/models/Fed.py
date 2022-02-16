@@ -3,6 +3,7 @@ import torch
 import numpy as np
 from scipy.linalg import solve
 
+import logging
 
 def FedAvg(w):
     w_avg = copy.deepcopy(w[0])
@@ -61,7 +62,7 @@ def whole_determination(pos, w_glob_last, cc_net):
             res = abs(aux_sum) / abs(aux_other_sum)
         else:
             res = 10
-        print('label {}-----aux_data:{}, aux_other:{}, ratio:{}'.format(it, aux_sum, aux_other_sum, res))
+        logging.info('label {}-----aux_data:{}, aux_other:{}, ratio:{}'.format(it, aux_sum, aux_other_sum, res))
         ratio_res.append(res)
 
     # normalize the radio alpha
@@ -98,7 +99,7 @@ def monitoring(cc_net, pos, w_glob_last, w_glob, num_class, num_users, num_sampl
                     glob_temp = (w_glob['resnet.fc{}.weight'.format(layer)].cpu().numpy()[i, j] - last) * num_users * args.local_bs
                     glob_sum += glob_temp
                     res_temp = (glob_temp - num_samples * temp_ave) / (cc - last - temp_ave)
-                    # print(res_temp)
+                    # logging.info(res_temp)
                     if 0 < res_temp < num_samples * 1.5 / num_class:
                         temp_res.append(res_temp)
         if len(temp_res) != 0: 

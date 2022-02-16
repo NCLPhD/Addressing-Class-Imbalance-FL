@@ -44,7 +44,7 @@ def test_img(net_g, datatest, label, args):
         # get the index of the max log-probability
         y_pred = log_probs.data.max(1, keepdim=True)[1]
         correct += y_pred.eq(target.data.view_as(y_pred)).long().cpu().sum()
-        #print(y_pred.eq(target.data.view_as(y_pred)).long().cpu())
+        #logging.info(y_pred.eq(target.data.view_as(y_pred)).long().cpu())
 
         pred = log_probs.data.cpu().numpy()
         pred_one_hot = label_binarize(y_pred.data.cpu().numpy(), [i for i in range(26)])
@@ -64,9 +64,9 @@ def test_img(net_g, datatest, label, args):
     accuracy = 100.00 * correct / len(data_loader.dataset)
     for i in range(len(false)):
         ac_temp = (false_all[i, 0] - false[i, 0]) / false_all[i, 0]
-        print('{:.4f}'.format(ac_temp))
-    print('AUC Score: {:.6f}, AUC Score New: {:.6f}'.format(auc_res, auc_res_new))
+        logging.info('{:.4f}'.format(ac_temp))
+    logging.info('AUC Score: {:.6f}, AUC Score New: {:.6f}'.format(auc_res, auc_res_new))
     if args.verbose:
-        print('\nTest set: Average loss: {:.4f} \nAccuracy: {}/{} ({:.2f}%)\nAUC Score: {:.4f}'.format(
+        logging.info('\nTest set: Average loss: {:.4f} \nAccuracy: {}/{} ({:.2f}%)\nAUC Score: {:.4f}'.format(
             test_loss, correct, len(data_loader.dataset), accuracy, auc_res))
     return accuracy, test_loss

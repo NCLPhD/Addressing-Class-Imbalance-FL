@@ -17,11 +17,14 @@ from models.Nets import MLP, CNNMnist, CNNCifar, Net
 from models.Fed import FedAvg, outlier_detect, whole_determination
 from models.test import test_img
 
+import logging
 
 if __name__ == '__main__':
     # parse args
     args = args_parser()
-    print(args.gpu)
+    logging.info(args.gpu)
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
 
     # load dataset and split users
@@ -46,7 +49,7 @@ if __name__ == '__main__':
         net_glob = MLP(dim_in=len_in, dim_hidden=128, dim_out=args.num_classes).to(args.device)
     else:
         exit('Error: unrecognized model')
-    # print(net_glob)
+    # logging.info(net_glob)
     net_glob.train()
 
     # copy weights
@@ -70,7 +73,7 @@ if __name__ == '__main__':
         m = max(int(args.frac * args.num_users), 1)
         np.random.seed(iter)
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
-        print(idxs_users)
+        logging.info(idxs_users)
 
         for idx in idxs_users:
             local = LocalUpdate(args=args, dataset=dataset_train, label=label_train, idxs=dict_users[idx], alpha=ratio, size_average=True)
@@ -96,22 +99,22 @@ if __name__ == '__main__':
 
         if args.loss == 'ratio':
             ratio = torch.tensor(whole_determination(pos, w_glob_last, cc_net), dtype=torch.float)
-            print(ratio)
+            logging.info(ratio)
 
 
         # copy weight to net_glob
         net_glob.load_state_dict(w_glob)
 
-        # print loss
+        # logging.info loss
         loss_avg = sum(loss_locals) / len(loss_locals)
         ac_avg = sum(ac_locals) / len(ac_locals)
-        print('Round {:3d}, Average loss {:.3f}, Accuracy {:.3f}\n'.format(iter, loss_avg, ac_avg))
+        logging.info('Round {:3d}, Average loss {:.3f}, Accuracy {:.3f}\n'.format(iter, loss_avg, ac_avg))
         loss_train.append(loss_avg)
 
     # testing
     net_glob.eval()
-    print('FL(femnist): {}, {}:1, former 7 classes, {} eps, {} local eps'.format(args.loss, int(1 / args.ratio), args.epochs, args.local_ep))
+    logging.info('FL(femnist): {}, {}:1, former 7 classes, {} eps, {} local eps'.format(args.loss, int(1 / args.ratio), args.epochs, args.local_ep))
 
     acc_test, loss_test = test_img(net_glob, dataset_test, label_test, args)
-    print("Testing accuracy: {:.2f}".format(acc_test))
+    logging.info("Testing accuracy: {:.2f}".format(acc_test))
 

@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io as sio
 from torchvision import datasets, transforms
+import logging
 
 def load_EMNIST_data(file, verbose = False, standarized = False):
     """
@@ -37,11 +38,11 @@ def load_EMNIST_data(file, verbose = False, standarized = False):
 
 
     if verbose == True:
-        print("EMNIST-letter dataset ... ")
-        print("X_train shape :", X_train.shape)
-        print("X_test shape :", X_test.shape)
-        print("y_train shape :", y_train.shape)
-        print("y_test shape :", y_test.shape)
+        logging.info("EMNIST-letter dataset ... ")
+        logging.info(f"X_train shape : {X_train.shape}")
+        logging.info(f"X_test shape : {X_test.shape}")
+        logging.info(f"y_train shape : {y_train.shape}")
+        logging.info(f"y_test shape : {y_test.shape}")
 
     return X_train, y_train, X_test, y_test, writer_ids_train, writer_ids_test
 

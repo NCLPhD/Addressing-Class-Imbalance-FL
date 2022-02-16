@@ -5,6 +5,7 @@ import numpy as np
 import torch.nn.functional as F
 from torch.autograd import Variable
 from sklearn.preprocessing import label_binarize
+import logging
 
 class FocalLoss(nn.Module):
     r"""
@@ -101,8 +102,8 @@ class Ratio_Cross_Entropy(nn.Module):
         N = inputs.size(0)
         C = inputs.size(1)
         P = F.softmax(inputs)
-        # print(inputs)
-        # print(P)
+        # logging.info(inputs)
+        # logging.info(P)
 
         class_mask = inputs.data.new(N, C).fill_(0)
         class_mask = Variable(class_mask)
@@ -209,7 +210,7 @@ class GHMC(nn.Module):
         for i in range(self.bins):
             inds = (g >= edges[i]) & (g < edges[i+1]) 
             num_in_bin = inds.sum().item()
-            # print(num_in_bin)
+            # logging.info(num_in_bin)
             if num_in_bin > 0:
                 if mmt > 0:
                     self.acc_sum[i] = mmt * self.acc_sum[i] \
@@ -222,21 +223,21 @@ class GHMC(nn.Module):
             weights = weights / n
 
         
-        # print(pred)
+        # logging.info(pred)
         # pred = P * weights
-        # print(pred)
+        # logging.info(pred)
 
         probs = (P * class_mask).sum(1).view(-1, 1)
 
         log_p = probs.log()
-        # print(probs)
-        # print(probs)
-        # print(log_p.size(), weights.size())
+        # logging.info(probs)
+        # logging.info(probs)
+        # logging.info(log_p.size(), weights.size())
 
         batch_loss = -log_p * weights / tot
-        # print(batch_loss)
+        # logging.info(batch_loss)
         loss = batch_loss.sum()
-        # print(loss)
+        # logging.info(loss)
         return loss
 
 

@@ -101,8 +101,8 @@ class Ratio_Cross_Entropy(nn.Module):
         N = inputs.size(0)
         C = inputs.size(1)
         P = F.softmax(inputs)
-        # print(inputs)
-        # print(P)
+        # logging.info(inputs)
+        # logging.info(P)
 
         class_mask = inputs.data.new(N, C).fill_(0)
         class_mask = Variable(class_mask)
@@ -209,7 +209,7 @@ class GHMC(nn.Module):
         for i in range(self.bins):
             inds = (g >= edges[i]) & (g < edges[i+1]) 
             num_in_bin = inds.sum().item()
-            # print(num_in_bin)
+            # logging.info(num_in_bin)
             if num_in_bin > 0:
                 if mmt > 0:
                     self.acc_sum[i] = mmt * self.acc_sum[i] \
@@ -222,21 +222,21 @@ class GHMC(nn.Module):
             weights = weights / n
 
         
-        # print(pred)
+        # logging.info(pred)
         # pred = P * weights
-        # print(pred)
+        # logging.info(pred)
 
         probs = (P * class_mask).sum(1).view(-1, 1)
 
         log_p = probs.log()
-        # print(probs)
-        # print(probs)
-        # print(log_p.size(), weights.size())
+        # logging.info(probs)
+        # logging.info(probs)
+        # logging.info(log_p.size(), weights.size())
 
         batch_loss = -log_p * weights / tot
-        # print(batch_loss)
+        # logging.info(batch_loss)
         loss = batch_loss.sum()
-        # print(loss)
+        # logging.info(loss)
         return loss
 
 
@@ -294,7 +294,7 @@ class LocalUpdate(object):
             batch_ac = []
             batch_whole = []
             for batch_idx, (images, labels) in enumerate(self.ldr_train):
-                # print(images, labels)
+                # logging.info(images, labels)
                 images = images.unsqueeze(1)
                 # labels = labels.unsqueeze(0)
                 images, labels = images.to(self.args.device, dtype=torch.float), labels.to(self.args.device, dtype=torch.long)
@@ -315,7 +315,7 @@ class LocalUpdate(object):
                 loss.backward()
                 optimizer.step()
                 if self.args.verbose and batch_idx % 10 == 0:
-                    print('Update Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(iter, batch_idx * len(images), len(self.ldr_train.dataset),100. * batch_idx / len(self.ldr_train), loss.item()))
+                    logging.info('Update Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(iter, batch_idx * len(images), len(self.ldr_train.dataset),100. * batch_idx / len(self.ldr_train), loss.item()))
                 batch_loss.append(loss.item())
                 batch_ac.append(ac)
                 batch_whole.append(whole)

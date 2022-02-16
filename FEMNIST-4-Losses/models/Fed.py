@@ -66,7 +66,7 @@ def whole_determination(pos, w_glob_last, cc_net):
             res = abs(aux_sum) / abs(aux_other_sum)
         else:
             res = 10
-        print('label {}-----aux_data:{}, aux_other:{}, ratio:{}'.format(it, aux_sum, aux_other_sum, res))
+        logging.info('label {}-----aux_data:{}, aux_other:{}, ratio:{}'.format(it, aux_sum, aux_other_sum, res))
         ratio_res.append(res)
 
     # normalize the radio alpha
