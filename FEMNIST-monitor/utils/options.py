@@ -7,7 +7,7 @@ def args_parser():
     # federated arguments
     parser.add_argument('--epochs', type=int, default=100, help="rounds of training")
     parser.add_argument('--loss', type=str, default='ce', help="loss of network")
-    parser.add_argument('--num_users', type=int, default=100, help="number of users: K")
+    parser.add_argument('--num_users', type=int, default=2, help="number of users: K")
     parser.add_argument('--frac', type=float, default=0.2, help="the fraction of clients: C")
     parser.add_argument('--local_ep', type=int, default=10, help="the number of local epochs: E")
     parser.add_argument('--local_bs', type=int, default=64, help="local batch size: B")

@@ -25,17 +25,52 @@ def outlier_detect(w_global, w_local, itera):
 
 def search_neuron_new(w):
     w = np.array(w)
+    # w.shape (26, 26, 512)
     pos_res = np.zeros((len(w), 26, 512))
     for i in range(w.shape[1]):
+        # all w of ratio
         for j in range(w.shape[2]):
+            # one fc w
             temp = []
             for p in range(len(w)):
+                # w[p, i, j] -0.11165216565132141
                 temp.append(w[p, i, j])
+                # logging.info(f"w[p, i, j] {w[p, i, j]}")
+            # max_index 9
             max_index = temp.index(max(temp))
+            # logging.info(f"max_index {max_index}")
             # pos_res[max_index, i, j] = 1
+
+            '''
+            np.abs(temp):
+            [0.10568462 0.10679625 0.11067726 0.11750869 0.11332259 0.12109801
+             0.11257678 0.10836944 0.10239743 1.9174933  0.10324977 0.1028914
+             0.11362322 0.11100769 0.10127872 0.10815635 0.10976717 0.11223927
+             0.11203289 0.11357106 0.10985509 0.11535287 0.10821186 0.12045987
+             0.11170693 0.11165217]
+             
+            abs(w[max_index, i, j]):
+            1.9174933433532715
+            
+            np.abs(temp) / abs(w[max_index, i, j]) > 0.8 :
+            [False False False False False False False False False False False False
+             False False False False False False False False False False False False
+             False  True]
+            
+            '''
+
+
             outlier = np.where(np.abs(temp) / abs(w[max_index, i, j]) > 0.8)
+            # logging.info(f"np.abs(temp) {np.abs(temp) / abs(w[max_index, i, j]) > 0.8}")
+            # logging.info(f"abs(w[max_index, i, j]) {abs(w[max_index, i, j])}")
+            # logging.info(f"outlier {outlier}")
+            # logging.info(f"outlier[0] {outlier[0]}")
+
+            # outlier[0] 25
             if len(outlier[0]) < 2:
+                logging.info("setting 111111")
                 pos_res[max_index, i, j] = 1
+    logging.info(f"pos_res {pos_res}")
     return pos_res
 
 def whole_determination(pos, w_glob_last, cc_net):

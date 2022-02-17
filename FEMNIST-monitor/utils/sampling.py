@@ -58,6 +58,7 @@ def ratio_loss_data(data_train, label_train, writer_train, num_class, args):
     dict_users = {i: np.array([], dtype='int64') for i in range(num_class)}
     for class_index in range(num_class):
         idx_temp = np.where(label_train == class_index)
+        # logging.info(len(idx_temp[0]))
         dict_users[class_index] = np.concatenate((dict_users[class_index], idx_temp[0][0:args.local_bs]), axis=0)
     return dict_users
 

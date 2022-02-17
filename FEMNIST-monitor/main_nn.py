@@ -54,7 +54,7 @@ if __name__ == '__main__':
         unq, unq_cnt = np.unique(label_train[dataidx], return_counts=True)
         tmp = {unq[i]: unq_cnt[i] for i in range(len(unq))}
         net_cls_counts[net_i] = tmp
-    logging.info('Data statistics: %s' % str(net_cls_counts))
+    # logging.info('Data statistics: %s' % str(net_cls_counts))
 
     # build model
     if args.model == 'cnn' and args.dataset == 'femnist':
@@ -85,6 +85,7 @@ if __name__ == '__main__':
     ratio = None
     val_acc_list, net_list = [], []
     dict_ratio = ratio_loss_data(dataset_train, label_train, w_train, 26, args)
+    # logging.info(f"dict_ratio {dict_ratio}")
 
     for iter in range(args.epochs):
         if iter > 135:
