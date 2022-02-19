@@ -98,6 +98,7 @@ if __name__ == '__main__':
 
         pro_ground_truth = ground_truth_composition(dict_users, idxs_users, 26, label_train)
         logging.info(f"ground_truth_composition : {pro_ground_truth}")
+        logging.info(f"label_train.shape : {label_train.shape}")
 
         for idx in idxs_users:
             local = LocalUpdate(args=args, dataset=dataset_train, label=label_train, idxs=dict_users[idx], alpha=ratio, size_average=True)
@@ -118,7 +119,7 @@ if __name__ == '__main__':
             cc_loss.append(copy.deepcopy(cc_lo))
             logging.info(f"Local aux {i}")
         pos = outlier_detect(w_glob, cc_net, iter)
-        logging.info(f"Outlier pos list: {pos}")
+        # logging.info(f"Outlier pos list: {pos}")
 
         # labelling process and updating global model
         w_glob_last = copy.deepcopy(w_glob)
@@ -127,6 +128,8 @@ if __name__ == '__main__':
         num_sample = np.sum(num_samples)
         pro_res_1, pro_res_2 = monitoring(cc_net, pos, w_glob_last, w_glob, 26, m, num_sample, args)
         # logging.info(pro_res_1, '\n', pro_res_2)
+        logging.info(f"pro_res_1 : {pro_res_1}")
+        logging.info(f"pro_ground_truth : {pro_ground_truth}")
         logging.info("cs_1: {:.4f}, cs_2: {:.4f}".format(cosine_similarity(pro_res_1, pro_ground_truth), cosine_similarity(pro_res_2, pro_ground_truth)))
         sim_1.append(cosine_similarity(pro_res_1, pro_ground_truth))
         # copy weight to net_glob
